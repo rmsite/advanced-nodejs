@@ -1,4 +1,4 @@
-import { type TokenGenerator } from '@/data/contracts/crypto'
+import { JwtTokenGenerator } from '@/infra/crypto'
 
 import jwt from 'jsonwebtoken'
 
