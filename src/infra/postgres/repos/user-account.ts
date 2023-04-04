@@ -3,10 +3,15 @@ import { PgUser } from '@/infra/postgres/entities'
 
 import { getRepository } from 'typeorm'
 
+type LoadParams = LoadUserAccountRepository.Params
+type LoadResult = LoadUserAccountRepository.Result
+type SaveParams = SaveFacebookAccountRepository.Params
+
 export class PgUserAccountRepository {
-  async load (params: LoadUserAccountRepository.Params): Promise<LoadUserAccountRepository.Result> {
-    const pgUserRepo = getRepository(PgUser)
-    const pgUser = await pgUserRepo.findOne(
+  private readonly pgUserRepo = getRepository(PgUser)
+
+  async load (params: LoadParams): Promise<LoadResult> {
+    const pgUser = await this.pgUserRepo.findOne(
       {
         where:
         { email: 'any_email' }
@@ -20,16 +25,15 @@ export class PgUserAccountRepository {
     }
   }
 
-  async saveWithFacebook (params: SaveFacebookAccountRepository.Params): Promise<void> {
-    const pgUserRepo = getRepository(PgUser)
+  async saveWithFacebook (params: SaveParams): Promise<void> {
     if (params.id === undefined) {
-      await pgUserRepo.save({
+      await this.pgUserRepo.save({
         email: params.email,
         name: params.name,
         facebookId: params.facebookId
       })
     } else {
-      await pgUserRepo.update({
+      await this.pgUserRepo.update({
         id: parseInt(params.id)
       }, {
         name: params.name,
