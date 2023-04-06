@@ -2,12 +2,10 @@ import { AuthenticationError } from '@/domain/errors'
 import { type FaceBookAuthentication } from '@/domain/features'
 import { AccessToken } from '@/domain/models'
 import { FacebookLoginController } from '@/application/controllers'
-import { ServerError, UnauthorizedError } from '@/application/errors'
-import { RequiredStringValidator, ValidationComposite } from '@/application/validation'
+import { UnauthorizedError } from '@/application/errors'
+import { RequiredStringValidator } from '@/application/validation'
 
 import { type MockProxy, mock } from 'jest-mock-extended'
-
-jest.mock('@/application/validation/composite')
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
@@ -24,21 +22,12 @@ describe('FacebookLoginController', () => {
     sut = new FacebookLoginController(facebookAuth)
   })
 
-  it('Should return 400 if validation fails', async () => {
-    const error = new Error('validation_error')
-    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
-      validate: jest.fn().mockReturnValueOnce(error)
-    }))
-    jest.mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy)
-    const httpResponse = await sut.handle({ token })
+  it('Should build Validators correctly', async () => {
+    const validators = sut.buildValidators({ token })
 
-    expect(ValidationComposite).toHaveBeenCalledWith([
+    expect(validators).toEqual([
       new RequiredStringValidator('any_token', 'token')
     ])
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: error
-    })
   })
 
   it('Should call FacebookAuthentication with correct params', async () => {
@@ -66,17 +55,6 @@ describe('FacebookLoginController', () => {
       data: {
         accessToken: 'any_value'
       }
-    })
-  })
-
-  it('Should return 500 if authentication throws', async () => {
-    const error = new Error('infra_error')
-    facebookAuth.perform.mockRejectedValueOnce(error)
-    const httpResponse = await sut.handle({ token })
-
-    expect(httpResponse).toEqual({
-      statusCode: 500,
-      data: new ServerError(error)
     })
   })
 })
