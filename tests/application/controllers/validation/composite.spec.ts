@@ -1,15 +1,19 @@
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { type MockProxy, mock } from 'jest-mock-extended'
 
 interface Validator {
   validate: () => Error | undefined
 }
 
-class ValidationComposite {
+class ValidationComposite implements Validator {
   constructor (private readonly validators: Validator[]) {}
 
-  validate (): undefined {
-    return undefined
+  validate (): Error | undefined {
+    for (const validator of this.validators) {
+      const error = validator.validate()
+      if (error !== undefined) {
+        return error
+      }
+    }
   }
 }
 
@@ -35,5 +39,13 @@ describe('ValidationComposite', () => {
     const error = sut.validate()
 
     expect(error).toBeUndefined()
+  })
+
+  it('Should return the first error', () => {
+    validator1.validate.mockReturnValue(new Error('error_1'))
+    validator2.validate.mockReturnValue(new Error('error_2'))
+    const error = sut.validate()
+
+    expect(error).toEqual(new Error('error_1'))
   })
 })
