@@ -1,12 +1,12 @@
 import { type FaceBookAuthentication } from '@/domain/features'
 
 import { type SaveFacebookAccountRepository, type LoadUserAccountRepository } from '@/domain/contracts/repos'
-import { AuthenticationError } from '@/domain/errors'
-import { AccessToken, FacebookAccount } from '@/domain/models'
+import { AuthenticationError } from '@/domain/entities/errors'
+import { AccessToken, FacebookAccount } from '@/domain/entities'
 import { type TokenGenerator } from '@/domain/contracts/crypto'
 import { type LoadFacebookUserAPi } from '@/domain/contracts/apis'
 
-export class FacebookAuthenticationService implements FaceBookAuthentication {
+export class FacebookAuthenticationUseCase implements FaceBookAuthentication {
   constructor (
     private readonly facebookApi: LoadFacebookUserAPi,
     private readonly userAccountRepo: LoadUserAccountRepository & SaveFacebookAccountRepository,
