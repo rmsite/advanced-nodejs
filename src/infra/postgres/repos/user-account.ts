@@ -1,4 +1,4 @@
-import { type SaveFacebookAccountRepository, type LoadUserAccountRepository } from '@/data/contracts/repos'
+import { type SaveFacebookAccountRepository, type LoadUserAccountRepository } from '@/domain/contracts/repos'
 import { PgUser } from '@/infra/postgres/entities'
 
 import { getRepository } from 'typeorm'
