@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { JwtTokenHandler } from '@/infra/crypto'
 
 import jwt from 'jsonwebtoken'
@@ -54,15 +55,25 @@ describe('JwtTokenHandler', () => {
 
   describe('validateToken', () => {
     let token: string
+    let key: string
 
     beforeAll(() => {
       token = 'any_token'
+      key = 'any_key'
+      fakeJwt.verify.mockImplementation(() => ({ key }))
     })
 
     it('Should call verify with correct params', async () => {
       await sut.validateToken({ token })
 
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
+      expect(fakeJwt.verify).toHaveBeenCalledTimes(1)
+    })
+
+    it('Should return the key used to sign', async () => {
+      const generatedKey = await sut.validateToken({ token })
+
+      expect(generatedKey).toBe(key)
       expect(fakeJwt.verify).toHaveBeenCalledTimes(1)
     })
   })
