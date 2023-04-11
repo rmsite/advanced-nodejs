@@ -1,6 +1,7 @@
-import { mock, type MockProxy } from 'jest-mock-extended'
 import { type TokenValidator } from '@/domain/contracts/crypto'
 import { type Authorize, setupAuthorize } from '@/domain/use-cases'
+
+import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('Authorize', () => {
   let crypto: MockProxy<TokenValidator>
