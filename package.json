@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/main",
+    "start": "node -r dotenv/config dist/main",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "prepare": "husky install",
     "check": "npm-check -s -u",
@@ -30,6 +30,7 @@
     "@types/node": "^18.15.10",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "dotenv": "^16.0.3",
     "eslint": "^8.36.0",
     "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-plugin-import": "^2.27.5",

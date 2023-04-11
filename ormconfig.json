@@ -1,9 +1,0 @@
-{
-  "type": "postgres",
-  "host": "motty.db.elephantsql.com",
-  "port": 5432,
-  "username": "ildwvnre",
-  "password": "cMz2508RQg5vsmzK678j3zT5UbwukabL",
-  "database": "ildwvnre",
-  "entities": ["dist/infra/postgres/entities/index.js"]
-}
