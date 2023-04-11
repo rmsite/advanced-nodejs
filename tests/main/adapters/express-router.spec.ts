@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/await-thenable */
+import { adaptExpressRoute } from '@/main/adapters'
 import { type Controller } from '@/application/controllers'
-import { adaptExpressRoute } from '@/infra/http'
 
 import { type RequestHandler, type Request, type Response, type NextFunction } from 'express'
 import { getMockReq, getMockRes } from '@jest-mock/express'
