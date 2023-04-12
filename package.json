@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node -r dotenv/config dist/main",
+    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config --inspect=0.0.0.0:9229 src/main",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "prepare": "husky install",
     "check": "npm-check -s -u",
@@ -43,6 +44,7 @@
     "pg-mem": "^1.9.17",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.2"
   },
   "dependencies": {
