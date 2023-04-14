@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import { JwtTokenHandler } from '@/infra/crypto'
+import { JwtTokenHandler } from '@/infra/gateways'
 
 import jwt from 'jsonwebtoken'
 
