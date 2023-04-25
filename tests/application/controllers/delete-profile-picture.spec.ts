@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import { Controller } from '@/application/controllers'
 import { type HttpResponse, noContent } from '@/application/helpers'
 import { type ChangeProfilePicture } from '@/domain/use-cases'
 
 type HttpRequest = { userId: string }
 
-class DeletePictureController {
-  constructor (private readonly changeProfilePicture: ChangeProfilePicture) {}
+class DeletePictureController extends Controller {
+  constructor (private readonly changeProfilePicture: ChangeProfilePicture) {
+    super()
+  }
 
-  async handle ({ userId }: HttpRequest): Promise<HttpResponse> {
+  async perform ({ userId }: HttpRequest): Promise<HttpResponse> {
     await this.changeProfilePicture({ id: userId })
     return noContent()
   }
@@ -23,6 +26,10 @@ describe('DeletePictureController', () => {
 
   beforeEach(() => {
     sut = new DeletePictureController(changeProfilePicture)
+  })
+
+  it('Should extend Controller', async () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('Should call ChangeProfilePicture with correct input', async () => {
