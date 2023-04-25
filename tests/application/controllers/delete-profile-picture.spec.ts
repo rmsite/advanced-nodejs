@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import { type HttpResponse, noContent } from '@/application/helpers'
 import { type ChangeProfilePicture } from '@/domain/use-cases'
 
 type HttpRequest = { userId: string }
@@ -5,8 +7,9 @@ type HttpRequest = { userId: string }
 class DeletePictureController {
   constructor (private readonly changeProfilePicture: ChangeProfilePicture) {}
 
-  async handle ({ userId }: HttpRequest): Promise<void> {
+  async handle ({ userId }: HttpRequest): Promise<HttpResponse> {
     await this.changeProfilePicture({ id: userId })
+    return noContent()
   }
 }
 
@@ -26,6 +29,16 @@ describe('DeletePictureController', () => {
     await sut.handle({ userId: 'any_user_id' })
 
     expect(changeProfilePicture).toHaveBeenCalledWith({ id: 'any_user_id' })
+    expect(changeProfilePicture).toHaveBeenCalledTimes(1)
+  })
+
+  it('Should return 204', async () => {
+    const httpResponse = await sut.handle({ userId: 'any_user_id' })
+
+    expect(httpResponse).toEqual({
+      statusCode: 204,
+      data: null
+    })
     expect(changeProfilePicture).toHaveBeenCalledTimes(1)
   })
 })
