@@ -5,10 +5,10 @@ type HttpRequest = { file: { buffer: Buffer, mimeType: string } }
 type Model = Error
 
 class SavePictureController {
-  async handle ({ file }: HttpRequest): Promise<HttpResponse<Model>> {
+  async handle ({ file }: HttpRequest): Promise<HttpResponse<Model> | undefined> {
     if (file === undefined || file === null) return badRequest(new RequiredFieldError('file'))
     if (file.buffer.length === 0) return badRequest(new RequiredFieldError('file'))
-    return badRequest(new InvalidMymeTypeError(['png', 'jpeg']))
+    if (!['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimeType)) return badRequest(new InvalidMymeTypeError(['png', 'jpeg']))
   }
 }
 
@@ -28,6 +28,7 @@ describe('SavePictureController', () => {
     buffer = Buffer.from('any_buffer')
     mimeType = 'image/png'
   })
+
   beforeEach(() => {
     sut = new SavePictureController()
   })
@@ -60,9 +61,36 @@ describe('SavePictureController', () => {
   })
 
   it('Should return 400 if file type is invalid', async () => {
-    const httpResponse = await sut.handle({ file: { buffer, mimeType } })
+    const httpResponse = await sut.handle({ file: { buffer, mimeType: 'invalid_type' } })
 
     expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new InvalidMymeTypeError(['png', 'jpeg'])
+    })
+  })
+
+  it('Should not return 400 if file type is valid', async () => {
+    const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/png' } })
+
+    expect(httpResponse).not.toEqual({
+      statusCode: 400,
+      data: new InvalidMymeTypeError(['png', 'jpeg'])
+    })
+  })
+
+  it('Should not return 400 if file type is valid', async () => {
+    const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/jpg' } })
+
+    expect(httpResponse).not.toEqual({
+      statusCode: 400,
+      data: new InvalidMymeTypeError(['png', 'jpeg'])
+    })
+  })
+
+  it('Should not return 400 if file type is valid', async () => {
+    const httpResponse = await sut.handle({ file: { buffer, mimeType: 'image/jpeg' } })
+
+    expect(httpResponse).not.toEqual({
       statusCode: 400,
       data: new InvalidMymeTypeError(['png', 'jpeg'])
     })
