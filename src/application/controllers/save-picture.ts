@@ -1,5 +1,5 @@
-import { RequiredFieldError, InvalidMimeTypeError, MaxFileSizeError } from '@/application/errors'
-import { type HttpResponse, badRequest, ok } from '@/application/helpers'
+import { AllowedMimeTypes, MaxFileSize, Required, RequiredBuffer, type Validator } from '@/application/validation'
+import { type HttpResponse, ok } from '@/application/helpers'
 import { type ChangeProfilePicture } from '@/domain/use-cases'
 import { Controller } from '@/application/controllers'
 
@@ -12,11 +12,16 @@ export class SavePictureController extends Controller {
   }
 
   override async perform ({ file, userId }: HttpRequest): Promise<HttpResponse<Model>> {
-    if (file === undefined || file === null) return badRequest(new RequiredFieldError('file'))
-    if (file.buffer.length === 0) return badRequest(new RequiredFieldError('file'))
-    if (!['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimeType)) return badRequest(new InvalidMimeTypeError(['png', 'jpeg']))
-    if (file.buffer.length > 5 * 1024 * 1024) return badRequest(new MaxFileSizeError(5))
     const data = await this.changeProfilePicture({ id: userId, file: file.buffer })
     return ok(data)
+  }
+
+  override buildValidators ({ file }: any): Validator[] {
+    return [
+      new Required(file, 'file'),
+      new RequiredBuffer(file.buffer, 'file'),
+      new AllowedMimeTypes(['png', 'jpg'], file.mimeType),
+      new MaxFileSize(5, file.buffer)
+    ]
   }
 }
