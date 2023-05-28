@@ -1,4 +1,4 @@
-import { AllowedMimeTypes, MaxFileSize, Required, RequiredBuffer, type Validator } from '@/application/validation'
+import { type Validator, ValidationBuilder as Builder } from '@/application/validation'
 import { type HttpResponse, ok } from '@/application/helpers'
 import { type ChangeProfilePicture } from '@/domain/use-cases'
 import { Controller } from '@/application/controllers'
@@ -18,10 +18,10 @@ export class SavePictureController extends Controller {
 
   override buildValidators ({ file }: any): Validator[] {
     return [
-      new Required(file, 'file'),
-      new RequiredBuffer(file.buffer, 'file'),
-      new AllowedMimeTypes(['png', 'jpg'], file.mimeType),
-      new MaxFileSize(5, file.buffer)
+      ...Builder.of({ value: file, fieldName: 'file' })
+        .required()
+        .image({ allowed: ['png', 'jpg'], maxSizeInMb: 5 })
+        .build()
     ]
   }
 }
