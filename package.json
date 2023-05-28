@@ -15,7 +15,8 @@
     "test:watch": "npm t -- --watch",
     "test:staged": "npm t -- --findRelatedTests",
     "test:coverage": "npm t -- --coverage",
-    "test:fb-api": "npm t -- -c ./jest.integration.config.js tests/external/facebook-api.test.ts"
+    "test:fb-api": "npm t -- -c ./jest.integration.config.js tests/external/facebook-api.test.ts",
+    "test:s3": "npm t -- -c ./jest.integration.config.js tests/external/aws-s3-file-storage.test.ts"
   },
   "keywords": [],
   "author": "",
