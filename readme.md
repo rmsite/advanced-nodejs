@@ -124,3 +124,19 @@ O objetivo é mostrar como criar uma API com uma arquitetura bem definida e desa
 * Stubs
 * Spies
 * Fakes
+
+## Rodando o projeto
+
+* Clonar o repositório
+* criar o arquivo .env e preencher as variáveis<br/>
+<code> cp .env.example .env</code>
+* instalar as dependências: <br/>
+<code> npm install</code>
+* rodar o docker para subir o localstack que é utilizado para simular o ambiente AWS <br/>
+<code>docker-compose up -d</code>
+* iniciar a aplicação <br/>
+<code> npm run dev </code> desenvolvimento, ou<br/>
+<code> npm start </code> em produção.
+
+## Bônus
+Você pode utilizar uma UI do localstack acessando https://app.localstack.cloud
