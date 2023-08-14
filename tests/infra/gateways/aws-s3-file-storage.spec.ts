@@ -25,9 +25,11 @@ describe('AwsS3FileStorage', () => {
   it('Should config aws credentials on creation', () => {
     expect(sut).toBeDefined()
     expect(config.update).toHaveBeenCalledWith({
-      credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secret
+      accessKeyId: accessKey,
+      secretAccessKey: secret,
+      s3: {
+        endpoint: undefined,
+        s3ForcePathStyle: true
       }
     })
     expect(config.update).toHaveBeenCalledTimes(1)

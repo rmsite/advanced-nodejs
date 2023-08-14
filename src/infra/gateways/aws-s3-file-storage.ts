@@ -3,11 +3,13 @@ import { type DeleteFile, type UploadFile } from '@/domain/contracts/gateways'
 import { config, S3 } from 'aws-sdk'
 
 export class AwsS3FileStorage implements DeleteFile, UploadFile {
-  constructor (accessKey: string, secret: string, private readonly bucket: string) {
+  constructor (accessKey: string, secret: string, private readonly bucket: string, s3endpoint?: string) {
     config.update({
-      credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secret
+      accessKeyId: accessKey,
+      secretAccessKey: secret,
+      s3: {
+        endpoint: s3endpoint,
+        s3ForcePathStyle: true
       }
     })
   }
